@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,18 +8,22 @@
     <!-- Premium Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <!-- FontAwesome Icons for Luxury UI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <!-- WordPress Admin Simulation Bar -->
     <div class="admin-toggle-bar">
         <button class="admin-toggle-btn" onclick="toggleAdminPanel()">
-            <i class="fab fa-wordpress"></i> WordPress Admin Panel (Simulation) <i class="fas fa-chevron-down" id="admin-chevron"></i>
+            <i class="fab fa-wordpress"></i> WordPress Admin Panel (Simulation) <i class="fas fa-chevron-down"
+                id="admin-chevron"></i>
         </button>
     </div>
 
@@ -30,19 +35,19 @@
                     <i class="fab fa-wordpress"></i> Custom Post Type Editor: <code>property</code>
                     <span>ACF Enabled</span>
                 </h2>
-                
+
                 <form id="wp-property-form" onsubmit="publishProperty(event)">
                     <div class="admin-grid">
-                        
+
                         <!-- Left Panel: Core CPT Fields -->
                         <div class="admin-form-section">
                             <h3 class="admin-section-title"><i class="fas fa-edit"></i> Core WordPress Fields</h3>
-                            
+
                             <div class="form-group">
                                 <label for="prop-title">Post Title (Property Name)</label>
                                 <input type="text" id="prop-title" placeholder="e.g. Grand Sunset Beach Villa" required>
                             </div>
-                            
+
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="prop-type">Listing Type (acf: type)</label>
@@ -65,30 +70,45 @@
                             <div class="form-group">
                                 <label for="prop-image-preset">Preset High-Res Luxury Image</label>
                                 <select id="prop-image-preset" onchange="updateImageInput(this.value)">
-                                    <option value="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80">Modernist Glass Mansion</option>
-                                    <option value="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80">Luxury Infinity Pool Estate</option>
-                                    <option value="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80">Sleek Minimalist Villa</option>
-                                    <option value="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80">Architectural Sea-View Oasis</option>
-                                    <option value="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80">Premium Hilltop Manor</option>
-                                    <option value="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80">Cliffside Wooden Villa</option>
+                                    <option
+                                        value="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80">
+                                        Modernist Glass Mansion</option>
+                                    <option
+                                        value="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80">
+                                        Luxury Infinity Pool Estate</option>
+                                    <option
+                                        value="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80">
+                                        Sleek Minimalist Villa</option>
+                                    <option
+                                        value="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80">
+                                        Architectural Sea-View Oasis</option>
+                                    <option
+                                        value="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80">
+                                        Premium Hilltop Manor</option>
+                                    <option
+                                        value="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80">
+                                        Cliffside Wooden Villa</option>
                                     <option value="custom">-- Use Custom Image URL --</option>
                                 </select>
                             </div>
 
                             <div class="form-group" id="custom-image-url-group" style="display: none;">
                                 <label for="prop-image-url">Custom Image URL</label>
-                                <input type="url" id="prop-image-url" placeholder="https://images.unsplash.com/... (must start with http/https)">
+                                <input type="url" id="prop-image-url"
+                                    placeholder="https://images.unsplash.com/... (must start with http/https)">
                             </div>
                         </div>
 
                         <!-- Right Panel: Advanced Custom Fields (ACF) -->
                         <div class="admin-form-section">
-                            <h3 class="admin-section-title"><i class="fas fa-project-diagram"></i> ACF (Advanced Custom Fields)</h3>
-                            
+                            <h3 class="admin-section-title"><i class="fas fa-project-diagram"></i> ACF (Advanced Custom
+                                Fields)</h3>
+
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="prop-price-display">Display Price (acf: price_display)</label>
-                                    <input type="text" id="prop-price-display" placeholder="e.g. ฿17.9M or ฿95K / mo" required>
+                                    <input type="text" id="prop-price-display" placeholder="e.g. ฿17.9M or ฿95K / mo"
+                                        required>
                                 </div>
                                 <div class="form-group">
                                     <label for="prop-price-value">Numeric Value in THB (acf: price_value)</label>
@@ -110,57 +130,62 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="prop-area">Area in SQM (acf: area_sqm)</label>
-                                    <input type="number" id="prop-area" min="10" max="5000" placeholder="e.g. 350" required>
+                                    <input type="number" id="prop-area" min="10" max="5000" placeholder="e.g. 350"
+                                        required>
                                 </div>
                                 <div class="form-group">
                                     <label for="prop-location">Location (acf: location_taxonomy)</label>
-                                    <input type="text" id="prop-location" placeholder="e.g. Pranburi, Phuket, Hua Hin" required>
+                                    <input type="text" id="prop-location" placeholder="e.g. Pranburi, Phuket, Hua Hin"
+                                        required>
                                 </div>
                             </div>
 
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="prop-land-area">Land Area (acf: land_sqm)</label>
-                                    <input type="number" id="prop-land-area" min="0" max="50000" placeholder="e.g. 968" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="prop-location-full">Full Address (acf: location_full)</label>
-                                    <input type="text" id="prop-location-full" placeholder="e.g. Sam Roi Yot Beach, Prachuab Kirikhan" required>
-                                </div>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="prop-desc-en">Description EN (acf: description)</label>
-                                    <input type="text" id="prop-desc-en" placeholder="English description..." required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="prop-desc-th">Description TH (acf: description_th)</label>
-                                    <input type="text" id="prop-desc-th" placeholder="คำอธิบายภาษาไทย..." required>
-                                </div>
-                            </div>
-
-                            <div class="checkbox-group">
-                                <input type="checkbox" id="prop-is-hot">
-                                <label for="prop-is-hot">Flag as Hot Offer? (acf: is_hot)</label>
-                            </div>
-
-                            <div class="checkbox-group" style="margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 12px;">
-                                <input type="checkbox" id="show-status-badge" onchange="toggleStatusBadge(this.checked)">
-                                <label for="show-status-badge">Show "Loop Grid Connected" Status Badge in Header</label>
-                            </div>
-
-                            <button type="submit" class="btn-publish">
-                                <i class="fas fa-cloud-upload-alt"></i> Publish Post
-                            </button>
                         </div>
 
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prop-land-area">Land Area (acf: land_sqm)</label>
+                                <input type="number" id="prop-land-area" min="0" max="50000" placeholder="e.g. 968"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prop-location-full">Full Address (acf: location_full)</label>
+                                <input type="text" id="prop-location-full"
+                                    placeholder="e.g. Sam Roi Yot Beach, Prachuab Kirikhan" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="prop-desc-en">Description EN (acf: description)</label>
+                                <input type="text" id="prop-desc-en" placeholder="English description..." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prop-desc-th">Description TH (acf: description_th)</label>
+                                <input type="text" id="prop-desc-th" placeholder="คำอธิบายภาษาไทย..." required>
+                            </div>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="prop-is-hot">
+                            <label for="prop-is-hot">Flag as Hot Offer? (acf: is_hot)</label>
+                        </div>
+
+                        <div class="checkbox-group"
+                            style="margin-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 12px;">
+                            <input type="checkbox" id="show-status-badge" onchange="toggleStatusBadge(this.checked)">
+                            <label for="show-status-badge">Show "Loop Grid Connected" Status Badge in Header</label>
+                        </div>
+
+                        <button type="submit" class="btn-publish">
+                            <i class="fas fa-cloud-upload-alt"></i> Publish Post
+                        </button>
                     </div>
-                </form>
+
             </div>
+            </form>
         </div>
+    </div>
     </div>
 
     <!-- Header / Brand Navigation -->
@@ -171,14 +196,19 @@
                     Sarah Joan <span>Thailand</span>
                 </a>
                 <nav class="nav-menu">
-                    <a href="#/properties" class="nav-link active" onclick="navigatePage('properties', event)">Properties</a>
+                    <a href="#/properties" class="nav-link active"
+                        onclick="navigatePage('properties', event)">Properties</a>
                     <a href="#/blog" class="nav-link" onclick="navigatePage('blog', event)">Blog</a>
                     <a href="#/about" class="nav-link" onclick="navigatePage('about', event)">About</a>
                     <a href="#/contact" class="nav-link" onclick="navigatePage('contact', event)">Contact</a>
                 </nav>
+                <button class="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Theme" style="margin-left: 20px;">
+                    <i class="fas fa-sun" id="theme-icon"></i>
+                </button>
                 <div class="wp-status-badge" onclick="toggleStatusDropdown(event)">
                     <span class="dot"></span> Loop Grid Connected
-                    <i class="fas fa-times close-badge-btn" title="Hide status badge" onclick="closeStatusBadge(event)"></i>
+                    <i class="fas fa-times close-badge-btn" title="Hide status badge"
+                        onclick="closeStatusBadge(event)"></i>
                     <!-- WP Engine status dropdown simulator -->
                     <div class="wp-status-dropdown" id="wp-status-dropdown" onclick="event.stopPropagation()">
                         <div class="status-dropdown-header">
@@ -196,11 +226,15 @@
                             <span>Total Posts in Loop:</span>
                             <strong id="status-total-posts">7 posts</strong>
                         </div>
-                        <div class="status-dropdown-row" style="flex-direction: column; align-items: flex-start; gap: 4px; margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
+                        <div class="status-dropdown-row"
+                            style="flex-direction: column; align-items: flex-start; gap: 4px; margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
                             <span>Active WP_Query:</span>
-                            <strong id="status-query-type" style="word-break: break-all; font-size: 10px; color: #b38e5d;">Default (All Posts)</strong>
+                            <strong id="status-query-type"
+                                style="word-break: break-all; font-size: 10px; color: #b38e5d;">Default (All
+                                Posts)</strong>
                         </div>
-                        <div class="status-dropdown-row" style="margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
+                        <div class="status-dropdown-row"
+                            style="margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 8px;">
                             <span>Engine Status:</span>
                             <span class="status-badge-ok">CONNECTED</span>
                         </div>
@@ -212,14 +246,32 @@
 
     <!-- Properties Page View Container -->
     <div id="properties-view-container">
-        <!-- Hero Intro -->
-        <section class="hero-section">
-            <div class="container">
-                <h5 class="hero-subtitle">Premium Living & Investment</h5>
-                <h1 class="hero-title">Discover Your Private Sanctuary</h1>
-                <p class="hero-desc">
-                    Simulating an Elementor Pro Loop Grid powered by Advanced Custom Fields (ACF) data structures. Manage, query, and filter your estate dynamically.
-                </p>
+        <!-- Elementor Pro Hero Slider Widget -->
+        <section class="container hero-slider-section"
+            style="margin-top: 30px; margin-bottom: 50px; position: relative;">
+            <div class="carousel-header" style="margin-bottom: 24px;">
+                <div class="carousel-header-left">
+                    <!-- <h5 class="carousel-subtitle"><i class="fas fa-sliders-h"></i> Elementor Pro Widget</h5> -->
+                    <!-- <h2 class="carousel-title">Featured Hero Slider</h2> -->
+                </div>
+            </div>
+
+            <div class="hero-slider" id="hero-slider"
+                style="border-radius: 20px; overflow: hidden; border: 1px solid var(--border-light); box-shadow: var(--shadow-subtle);">
+                <div class="hero-slider-track" id="hero-slider-track">
+                    <!-- Dynamically populated via JS -->
+                </div>
+
+                <!-- Slider Navigation Controls -->
+                <button class="hero-slider-nav prev-btn" onclick="moveHeroSlider(-1)" aria-label="Previous Slide">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="hero-slider-nav next-btn" onclick="moveHeroSlider(1)" aria-label="Next Slide">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Navigation Dots -->
+                <div class="hero-slider-dots" id="hero-slider-dots"></div>
             </div>
         </section>
 
@@ -227,7 +279,8 @@
         <section class="container filter-suite">
             <!-- Quick Filter Tabs -->
             <div class="quick-tabs">
-                <button class="quick-tab-btn active" data-tab="all" onclick="filterByTab('all', this)">All Listings</button>
+                <button class="quick-tab-btn active" data-tab="all" onclick="filterByTab('all', this)">All
+                    Listings</button>
                 <button class="quick-tab-btn" data-tab="sale" onclick="filterByTab('sale', this)">For Sale</button>
                 <button class="quick-tab-btn" data-tab="rent" onclick="filterByTab('rent', this)">For Rent</button>
                 <button class="quick-tab-btn" data-tab="hot" onclick="filterByTab('hot', this)">🔥 Hot Offers</button>
@@ -236,7 +289,7 @@
             <!-- 3-Column Search Panel -->
             <div class="search-panel">
                 <div class="search-grid">
-                    
+
                     <!-- Area/Location Filter -->
                     <div class="search-field">
                         <label for="filter-location"><i class="fas fa-map-marker-alt"></i> Area / Location</label>
@@ -289,7 +342,8 @@
         <main class="container loop-grid-container">
             <div class="grid-header">
                 <div class="grid-header-title">
-                    <i class="fas fa-th-large"></i> Elementor Pro Loop Grid Emulation
+                    <!-- <i class="fas fa-th-large"></i> Elementor Pro Loop Grid Emulation -->
+                    <i class="fas fa-th-large"></i> Properties List
                 </div>
                 <div class="grid-results-count" id="results-count">
                     Showing 0 of 0 properties
@@ -309,7 +363,8 @@
                 <h5 class="hero-subtitle">Insights & Market Trends</h5>
                 <h1 class="hero-title">Sarah Joan Journal</h1>
                 <p class="hero-desc">
-                    Your source for Thailand luxury real estate insights, lifestyle guides, and market investment reports.
+                    Your source for Thailand luxury real estate insights, lifestyle guides, and market investment
+                    reports.
                 </p>
             </div>
         </section>
@@ -318,39 +373,45 @@
             <div class="blog-grid">
                 <div class="blog-card" onclick="openBlogPost(1)">
                     <div class="blog-image-wrap">
-                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Blog Image 1">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+                            alt="Blog Image 1">
                         <span class="blog-card-category">Market Insights</span>
                     </div>
                     <div class="blog-card-content">
                         <div class="blog-card-date">June 1, 2026</div>
                         <h3 class="blog-card-title">Why Pranburi is Thailand's Rising Luxury Real Estate Star</h3>
-                        <p class="blog-card-excerpt">Discover why high-net-worth investors are turning their sights from Phuket to the quiet beachfront sanctuaries of Pranburi...</p>
+                        <p class="blog-card-excerpt">Discover why high-net-worth investors are turning their sights from
+                            Phuket to the quiet beachfront sanctuaries of Pranburi...</p>
                         <span class="blog-card-more">Read Article <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </div>
 
                 <div class="blog-card" onclick="openBlogPost(2)">
                     <div class="blog-image-wrap">
-                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" alt="Blog Image 2">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
+                            alt="Blog Image 2">
                         <span class="blog-card-category">Investment Guide</span>
                     </div>
                     <div class="blog-card-content">
                         <div class="blog-card-date">May 25, 2026</div>
                         <h3 class="blog-card-title">Investing in Thai Elite Visa Properties: A Comprehensive Guide</h3>
-                        <p class="blog-card-excerpt">Navigating the rules, benefits, and structures of property investments paired with Thailand's premium long-term residency visas...</p>
+                        <p class="blog-card-excerpt">Navigating the rules, benefits, and structures of property
+                            investments paired with Thailand's premium long-term residency visas...</p>
                         <span class="blog-card-more">Read Article <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </div>
 
                 <div class="blog-card" onclick="openBlogPost(3)">
                     <div class="blog-image-wrap">
-                        <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80" alt="Blog Image 3">
+                        <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80"
+                            alt="Blog Image 3">
                         <span class="blog-card-category">Design Trends</span>
                     </div>
                     <div class="blog-card-content">
                         <div class="blog-card-date">May 18, 2026</div>
                         <h3 class="blog-card-title">Top Design Trends in Modern Beachfront Villas for 2026</h3>
-                        <p class="blog-card-excerpt">Glassmorphism, seamless inside-out living, and sustainable solar-powered luxury are taking center stage this year...</p>
+                        <p class="blog-card-excerpt">Glassmorphism, seamless inside-out living, and sustainable
+                            solar-powered luxury are taking center stage this year...</p>
                         <span class="blog-card-more">Read Article <i class="fas fa-arrow-right"></i></span>
                     </div>
                 </div>
@@ -368,7 +429,8 @@
                 <h5 class="hero-subtitle">Our Heritage & Values</h5>
                 <h1 class="hero-title">About Sarah Joan Thailand</h1>
                 <p class="hero-desc">
-                    Re-defining luxury property brokerage with custom care, absolute discretion, and high-end aesthetics.
+                    Re-defining luxury property brokerage with custom care, absolute discretion, and high-end
+                    aesthetics.
                 </p>
             </div>
         </section>
@@ -376,26 +438,34 @@
         <section class="container">
             <div class="about-grid">
                 <div class="about-image-side">
-                    <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80" alt="Sarah Joan Office">
+                    <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80"
+                        alt="Sarah Joan Office">
                 </div>
                 <div class="about-text-side">
                     <h2 class="about-heading">Curating Private Sanctuaries</h2>
                     <p class="about-paragraph">
-                        Sarah Joan Thailand is a premium boutique real estate firm built upon decades of combined experience in luxury properties. We specialize in curating luxury beachfront villas, high-altitude cliffside estates, and ultra-modern downtown penthouses in Thailand's most sought-after tropical destinations, including Pranburi, Hua Hin, Phuket, Koh Samui, and Bangkok.
+                        Sarah Joan Thailand is a premium boutique real estate firm built upon decades of combined
+                        experience in luxury properties. We specialize in curating luxury beachfront villas,
+                        high-altitude cliffside estates, and ultra-modern downtown penthouses in Thailand's most
+                        sought-after tropical destinations, including Pranburi, Hua Hin, Phuket, Koh Samui, and Bangkok.
                     </p>
                     <p class="about-paragraph">
-                        Unlike traditional brokerages, we operate like a private concierge office. We understand that acquiring premium estate is not just about transactions, but about finding a sanctuary that reflects your aesthetic values, architectural appreciation, and lifestyle aspirations.
+                        Unlike traditional brokerages, we operate like a private concierge office. We understand that
+                        acquiring premium estate is not just about transactions, but about finding a sanctuary that
+                        reflects your aesthetic values, architectural appreciation, and lifestyle aspirations.
                     </p>
                     <div class="about-values">
                         <div class="value-item">
                             <i class="fas fa-award"></i>
                             <h4>Exceptional Standards</h4>
-                            <p>We only represent properties that meet our strict architectural and aesthetic guidelines.</p>
+                            <p>We only represent properties that meet our strict architectural and aesthetic guidelines.
+                            </p>
                         </div>
                         <div class="value-item">
                             <i class="fas fa-shield-alt"></i>
                             <h4>Absolute Discretion</h4>
-                            <p>Privacy is our currency. We handle high-profile listings and off-market deals with absolute confidentiality.</p>
+                            <p>Privacy is our currency. We handle high-profile listings and off-market deals with
+                                absolute confidentiality.</p>
                         </div>
                     </div>
                 </div>
@@ -410,7 +480,8 @@
                 <h5 class="hero-subtitle">Begin Your Journey</h5>
                 <h1 class="hero-title">Contact Sarah Joan</h1>
                 <p class="hero-desc">
-                    Ready to discover your next tropical sanctuary? Get in touch with our team of elite property specialists.
+                    Ready to discover your next tropical sanctuary? Get in touch with our team of elite property
+                    specialists.
                 </p>
             </div>
         </section>
@@ -445,9 +516,12 @@
                         </div>
                         <div class="form-group">
                             <label for="contact-message">Your Message</label>
-                            <textarea id="contact-message" rows="5" placeholder="Tell us about your requirements..." style="background: #252525; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; color: var(--color-text-primary); padding: 14px 20px; font-family: var(--font-body); font-size: 13px; width: 100%; resize: vertical;" required></textarea>
+                            <textarea id="contact-message" rows="5" placeholder="Tell us about your requirements..."
+                                style="background: #252525; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 10px; color: var(--color-text-primary); padding: 14px 20px; font-family: var(--font-body); font-size: 13px; width: 100%; resize: vertical;"
+                                required></textarea>
                         </div>
-                        <button type="submit" class="btn-publish" style="width: auto; padding: 12px 35px; border-radius: var(--border-radius-capsule);">
+                        <button type="submit" class="btn-publish"
+                            style="width: auto; padding: 12px 35px; border-radius: var(--border-radius-capsule);">
                             Submit Inquiry
                         </button>
                     </form>
@@ -456,7 +530,7 @@
                 <div class="contact-info-side">
                     <div class="info-card">
                         <h3 class="contact-box-title">Our Offices</h3>
-                        
+
                         <div class="contact-detail-item">
                             <i class="fas fa-map-marker-alt"></i>
                             <div>
@@ -498,7 +572,8 @@
         <div class="container">
             <div class="footer-logo">SARAH JOAN THAILAND</div>
             <div class="footer-copyright">
-                &copy; 2026 Sarah Joan Thailand - Single Page Demo. Built with <span>WordPress & ACF Loop Emulation</span>.
+                &copy; 2026 Sarah Joan Thailand - Single Page Demo. Built with <span>WordPress & ACF Loop
+                    Emulation</span>.
             </div>
         </div>
     </footer>
@@ -506,7 +581,29 @@
     <!-- Toast Notifications Area -->
     <div class="notification-toast-container" id="toast-container"></div>
 
+    <!-- Floating Contact Widget (Right Side) -->
+    <div class="floating-contact-widget" id="floating-contact-widget">
+        <div class="floating-sub-buttons">
+            <a href="tel:+66987654321" class="floating-btn phone-btn" data-tooltip="Call Us">
+                <i class="fas fa-phone-alt"></i>
+            </a>
+            <a href="https://line.me/ti/p/~sarahjoan" target="_blank" class="floating-btn line-btn"
+                data-tooltip="Line Official">
+                <i class="fab fa-line"></i>
+            </a>
+            <a href="https://wa.me/66987654321" target="_blank" class="floating-btn whatsapp-btn"
+                data-tooltip="WhatsApp Chat">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </div>
+        <button class="floating-btn toggle-btn" id="contact-toggle-btn" onclick="toggleContactWidget(event)"
+            data-tooltip="Contact Us">
+            <i class="fas fa-comments" id="contact-toggle-icon"></i>
+        </button>
+    </div>
+
     <!-- Scripting Layer -->
     <script src="script.js"></script>
 </body>
+
 </html>

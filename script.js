@@ -188,6 +188,431 @@
             refreshTaxonomies();
             runCombinedFilters();
             updateStatusPostCount();
+            initCarousel();
+            initHeroSlider();
+            
+            // Apply saved theme preference
+            const savedTheme = localStorage.getItem('sj-theme');
+            const icon = document.getElementById('theme-icon');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                if (icon) icon.className = 'fas fa-moon';
+            } else {
+                document.body.classList.remove('light-theme');
+                if (icon) icon.className = 'fas fa-sun';
+            }
+        });
+
+        // --- Full-Bleed Luxury Hero Slider Implementation ---
+        let heroSliderCurrentIndex = 0;
+        let heroSliderAutoplayTimer = null;
+
+        function initHeroSlider() {
+            const track = document.getElementById('hero-slider-track');
+            const dotsContainer = document.getElementById('hero-slider-dots');
+            const sliderContainer = document.getElementById('hero-slider');
+            if (!track) return;
+
+            track.innerHTML = '';
+            
+            // Create the welcome slide data and map property data
+            const slidesData = [
+                {
+                    isWelcome: true,
+                    title: "Discover Your Private Sanctuary",
+                    subtitle: "Premium Living & Investment",
+                    desc: "Simulating an Elementor Pro Loop Grid powered by Advanced Custom Fields (ACF) data structures. Manage, query, and filter your estate dynamically.",
+                    image_url: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1600&q=80"
+                },
+                ...properties.slice(0, 4).map(p => ({
+                    isWelcome: false,
+                    id: p.id,
+                    title: p.title,
+                    location: p.acf_fields.location_taxonomy,
+                    price: p.acf_fields.price_display,
+                    beds: p.acf_fields.bedrooms,
+                    baths: p.acf_fields.bathrooms,
+                    area: p.acf_fields.area_sqm,
+                    desc: p.acf_fields.description,
+                    image_url: p.acf_fields.image_url
+                }))
+            ];
+
+            slidesData.forEach((slideData, index) => {
+                const slide = document.createElement('div');
+                slide.className = `hero-slide ${index === 0 ? 'active' : ''}`;
+                slide.dataset.index = index;
+
+                if (slideData.isWelcome) {
+                    slide.innerHTML = `
+                        <div class="hero-slide-bg" style="background-image: url('${slideData.image_url}');"></div>
+                        <div class="hero-slide-overlay"></div>
+                        <div class="hero-slide-glass-card">
+                            <h5 class="hero-slide-subtitle">
+                                <i class="fas fa-gem"></i> ${slideData.subtitle.toUpperCase()}
+                            </h5>
+                            <h2 class="hero-slide-title">${slideData.title}</h2>
+                            <p class="hero-slide-desc" style="margin-top: 10px;">${slideData.desc}</p>
+                            <div class="hero-slide-actions" style="margin-top: 15px;">
+                                <button class="hero-slide-btn" onclick="document.querySelector('.filter-suite').scrollIntoView({behavior: 'smooth'})">
+                                    Explore Properties <i class="fas fa-arrow-down"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    slide.innerHTML = `
+                        <div class="hero-slide-bg" style="background-image: url('${slideData.image_url}');"></div>
+                        <div class="hero-slide-overlay"></div>
+                        <div class="hero-slide-glass-card">
+                            <h5 class="hero-slide-subtitle">
+                                <i class="fas fa-map-marker-alt"></i> ${slideData.location.toUpperCase()}
+                            </h5>
+                            <h2 class="hero-slide-title">${slideData.title}</h2>
+                            <div class="hero-slide-details">
+                                <span class="hero-slide-price">${slideData.price}</span>
+                                <div class="hero-slide-specs">
+                                    <span><i class="fas fa-bed"></i> ${slideData.beds} Beds</span>
+                                    <span><i class="fas fa-bath"></i> ${slideData.baths} Baths</span>
+                                    <span><i class="fas fa-expand-arrows-alt"></i> ${slideData.area} m²</span>
+                                </div>
+                            </div>
+                            <p class="hero-slide-desc">${slideData.desc}</p>
+                            <div class="hero-slide-actions">
+                                <button class="hero-slide-btn" onclick="openProperty(${slideData.id})">
+                                    Explore Estate <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+                track.appendChild(slide);
+            });
+
+            // Rebuild pagination dots
+            if (dotsContainer) {
+                dotsContainer.innerHTML = '';
+                slidesData.forEach((_, index) => {
+                    const dot = document.createElement('button');
+                    dot.className = `hero-slider-dot ${index === 0 ? 'active' : ''}`;
+                    dot.setAttribute('aria-label', `Go to slide ${index + 1}`);
+                    dot.onclick = () => {
+                        showHeroSlide(index);
+                        startHeroAutoplay();
+                    };
+                    dotsContainer.appendChild(dot);
+                });
+            }
+
+            heroSliderCurrentIndex = 0;
+            setupHeroSliderGestures();
+            startHeroAutoplay();
+
+            // Hover pause/resume
+            if (sliderContainer) {
+                sliderContainer.addEventListener('mouseenter', stopHeroAutoplay);
+                sliderContainer.addEventListener('mouseleave', startHeroAutoplay);
+            }
+        }
+
+        function showHeroSlide(index) {
+            const track = document.getElementById('hero-slider-track');
+            if (!track) return;
+            const slides = track.querySelectorAll('.hero-slide');
+            const dots = document.querySelectorAll('.hero-slider-dot');
+            if (slides.length === 0) return;
+
+            if (index < 0) {
+                index = slides.length - 1;
+            } else if (index >= slides.length) {
+                index = 0;
+            }
+
+            heroSliderCurrentIndex = index;
+
+            slides.forEach((slide, idx) => {
+                if (idx === index) {
+                    slide.classList.add('active');
+                } else {
+                    slide.classList.remove('active');
+                }
+            });
+
+            dots.forEach((dot, idx) => {
+                if (idx === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function moveHeroSlider(direction) {
+            showHeroSlide(heroSliderCurrentIndex + direction);
+            startHeroAutoplay();
+        }
+
+        function startHeroAutoplay() {
+            stopHeroAutoplay();
+            heroSliderAutoplayTimer = setInterval(() => {
+                moveHeroSlider(1);
+            }, 6500);
+        }
+
+        function stopHeroAutoplay() {
+            if (heroSliderAutoplayTimer) {
+                clearInterval(heroSliderAutoplayTimer);
+            }
+        }
+
+        function setupHeroSliderGestures() {
+            const slider = document.getElementById('hero-slider');
+            if (!slider) return;
+
+            slider.addEventListener('touchstart', dragStart, { passive: true });
+            slider.addEventListener('touchend', dragEnd);
+            slider.addEventListener('touchmove', dragMove, { passive: true });
+
+            slider.addEventListener('mousedown', dragStart);
+            slider.addEventListener('mouseup', dragEnd);
+            slider.addEventListener('mouseleave', dragEnd);
+            slider.addEventListener('mousemove', dragMove);
+
+            let startX = 0;
+            let isDragging = false;
+
+            function dragStart(e) {
+                isDragging = true;
+                startX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+                stopHeroAutoplay();
+            }
+
+            function dragMove(e) {
+                if (!isDragging) return;
+            }
+
+            function dragEnd(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                const endX = e.type.includes('touch') ? e.changedTouches[0].clientX : e.clientX;
+                const diffX = endX - startX;
+
+                if (diffX < -80) {
+                    moveHeroSlider(1);
+                } else if (diffX > 80) {
+                    moveHeroSlider(-1);
+                } else {
+                    startHeroAutoplay();
+                }
+            }
+        }
+
+        // --- Elementor Pro Loop Carousel JavaScript Implementation ---
+        let carouselCurrentIndex = 0;
+        let carouselAutoplayTimer = null;
+        let isDragging = false;
+        let startX = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+
+        // Populate and initialize the carousel
+        function initCarousel() {
+            const track = document.getElementById('carousel-track');
+            if (!track) return;
+
+            track.innerHTML = '';
+            
+            // Load mock properties database into the slider
+            properties.forEach(prop => {
+                const acf = prop.acf_fields;
+                let badgeClass = 'status-sale';
+                if (acf.badge_status === 'FOR RENT') badgeClass = 'status-rent';
+                if (acf.badge_status === 'SOLD') badgeClass = 'status-sale';
+                
+                const card = document.createElement('div');
+                card.className = 'property-card';
+                card.style.cursor = 'pointer';
+                card.setAttribute('onclick', `openProperty(${prop.id})`);
+                card.innerHTML = `
+                    <div class="card-image-wrap">
+                        <img src="${acf.image_url}" alt="${prop.title}" loading="lazy">
+                        <span class="card-badge ${badgeClass}">${acf.badge_status}</span>
+                        ${acf.is_hot ? `<span class="card-badge status-hot">HOT OFFER</span>` : ''}
+                    </div>
+                    <div class="card-content">
+                        <div class="card-location">
+                            <i class="fas fa-map-marker-alt"></i> ${acf.location_taxonomy}
+                        </div>
+                        <h4 class="card-title">${prop.title}</h4>
+                        <div class="card-price">${acf.price_display}</div>
+                        <div class="card-divider"></div>
+                        <div class="card-specs">
+                            <div class="spec-item">
+                                <i class="fas fa-bed"></i>
+                                <span>${acf.bedrooms} <span class="spec-label">Beds</span></span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-bath"></i>
+                                <span>${acf.bathrooms} <span class="spec-label">Baths</span></span>
+                            </div>
+                            <div class="spec-item">
+                                <i class="fas fa-expand-arrows-alt"></i>
+                                <span>${acf.area_sqm} <span class="spec-label">m²</span></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                // Prevent drag ghost image on child elements
+                card.querySelectorAll('img').forEach(img => {
+                    img.addEventListener('dragstart', (e) => e.preventDefault());
+                });
+                track.appendChild(card);
+            });
+
+            updateCarouselView();
+            setupCarouselGestures();
+            startAutoplay();
+        }
+
+        // Get items displayed per page based on viewport size
+        function getItemsPerPage() {
+            if (window.innerWidth > 992) return 3;
+            if (window.innerWidth > 768) return 2;
+            return 1;
+        }
+
+        // Calculate maximum sliding index
+        function getMaxIndex() {
+            const itemsPerPage = getItemsPerPage();
+            return Math.max(0, properties.length - itemsPerPage);
+        }
+
+        // Move and update the track transform
+        function updateCarouselView() {
+            const track = document.getElementById('carousel-track');
+            const dotsContainer = document.getElementById('carousel-dots');
+            if (!track) return;
+
+            const maxIndex = getMaxIndex();
+
+            if (carouselCurrentIndex > maxIndex) {
+                carouselCurrentIndex = maxIndex;
+            }
+
+            const itemWidth = track.firstElementChild ? track.firstElementChild.getBoundingClientRect().width : 0;
+            const gap = 30; // Matches CSS Grid gap
+            const translateVal = -carouselCurrentIndex * (itemWidth + gap);
+
+            track.style.transform = `translateX(${translateVal}px)`;
+            prevTranslate = translateVal;
+
+            // Rebuild pagination dots
+            if (dotsContainer) {
+                dotsContainer.innerHTML = '';
+                const totalDots = maxIndex + 1;
+                for (let i = 0; i < totalDots; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = `carousel-dot ${i === carouselCurrentIndex ? 'active' : ''}`;
+                    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+                    dot.onclick = () => {
+                        carouselCurrentIndex = i;
+                        updateCarouselView();
+                        startAutoplay();
+                    };
+                    dotsContainer.appendChild(dot);
+                }
+            }
+        }
+
+        // Navigate slides
+        function moveCarousel(direction) {
+            const maxIndex = getMaxIndex();
+            carouselCurrentIndex += direction;
+
+            if (carouselCurrentIndex < 0) {
+                carouselCurrentIndex = maxIndex;
+            } else if (carouselCurrentIndex > maxIndex) {
+                carouselCurrentIndex = 0;
+            }
+
+            updateCarouselView();
+            startAutoplay();
+        }
+
+        // Autoplay functions
+        function startAutoplay() {
+            stopAutoplay();
+            carouselAutoplayTimer = setInterval(() => {
+                moveCarousel(1);
+            }, 4000);
+        }
+
+        function stopAutoplay() {
+            if (carouselAutoplayTimer) {
+                clearInterval(carouselAutoplayTimer);
+            }
+        }
+
+        // Mouse and Touch dragging gesture logic
+        function setupCarouselGestures() {
+            const viewport = document.getElementById('carousel-viewport');
+            const track = document.getElementById('carousel-track');
+            if (!viewport || !track) return;
+
+            viewport.addEventListener('dragstart', (e) => e.preventDefault());
+
+            viewport.addEventListener('touchstart', dragStart, { passive: true });
+            viewport.addEventListener('touchend', dragEnd);
+            viewport.addEventListener('touchmove', dragMove, { passive: true });
+
+            viewport.addEventListener('mousedown', dragStart);
+            viewport.addEventListener('mouseup', dragEnd);
+            viewport.addEventListener('mouseleave', dragEnd);
+            viewport.addEventListener('mousemove', dragMove);
+
+            function dragStart(e) {
+                isDragging = true;
+                startX = getPositionX(e);
+                stopAutoplay();
+                track.style.transition = 'none'; // Remove transition for 1:1 drag feel
+            }
+
+            function dragMove(e) {
+                if (!isDragging) return;
+                const currentX = getPositionX(e);
+                const diffX = currentX - startX;
+                currentTranslate = prevTranslate + diffX;
+                track.style.transform = `translateX(${currentTranslate}px)`;
+            }
+
+            function dragEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                track.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+
+                const movedBy = currentTranslate - prevTranslate;
+                const itemWidth = track.firstElementChild ? track.firstElementChild.getBoundingClientRect().width : 100;
+                const threshold = itemWidth / 4; // Swipe threshold is 25% of item width
+
+                if (movedBy < -threshold) {
+                    moveCarousel(1);
+                } else if (movedBy > threshold) {
+                    moveCarousel(-1);
+                } else {
+                    updateCarouselView(); // Snap back to current
+                }
+
+                startAutoplay();
+            }
+
+            function getPositionX(e) {
+                return e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            }
+        }
+
+        // Handle resize events
+        window.addEventListener('resize', () => {
+            updateCarouselView();
         });
 
         // Toggle admin panel expansion
@@ -209,11 +634,42 @@
             }
         }
 
-        // Close dropdown when clicking outside
-        window.addEventListener('click', () => {
+        // Toggle floating contact widget
+        function toggleContactWidget(event) {
+            if (event) event.stopPropagation();
+            const widget = document.getElementById('floating-contact-widget');
+            const icon = document.getElementById('contact-toggle-icon');
+            const toggleBtn = document.getElementById('contact-toggle-btn');
+            if (widget) {
+                widget.classList.toggle('active');
+                if (widget.classList.contains('active')) {
+                    if (icon) icon.className = 'fas fa-times';
+                    if (toggleBtn) toggleBtn.setAttribute('data-tooltip', 'Close');
+                } else {
+                    if (icon) icon.className = 'fas fa-comments';
+                    if (toggleBtn) toggleBtn.setAttribute('data-tooltip', 'Contact Us');
+                }
+            }
+        }
+
+        // Close dropdown and contact widget when clicking outside
+        window.addEventListener('click', (e) => {
+            // Close WP status dropdown
             const dropdown = document.getElementById('wp-status-dropdown');
             if (dropdown && dropdown.classList.contains('show')) {
                 dropdown.classList.remove('show');
+            }
+
+            // Close contact widget
+            const widget = document.getElementById('floating-contact-widget');
+            const icon = document.getElementById('contact-toggle-icon');
+            const toggleBtn = document.getElementById('contact-toggle-btn');
+            if (widget && widget.classList.contains('active')) {
+                if (!widget.contains(e.target)) {
+                    widget.classList.remove('active');
+                    if (icon) icon.className = 'fas fa-comments';
+                    if (toggleBtn) toggleBtn.setAttribute('data-tooltip', 'Contact Us');
+                }
             }
         });
 
@@ -1071,6 +1527,8 @@
             refreshTaxonomies();
             runCombinedFilters();
             updateStatusPostCount();
+            initCarousel();
+            initHeroSlider();
 
             // Success Visual Feedback
             showToast(
@@ -1116,4 +1574,21 @@
                     toast.remove();
                 });
             }, 5000);
+        }
+
+        // Toggle light/dark theme function
+        function toggleTheme() {
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('light-theme');
+            
+            if (body.classList.contains('light-theme')) {
+                if (icon) icon.className = 'fas fa-moon';
+                localStorage.setItem('sj-theme', 'light');
+                showToast("Theme Switch", "Switched to Pearl & Ocean Light Theme.");
+            } else {
+                if (icon) icon.className = 'fas fa-sun';
+                localStorage.setItem('sj-theme', 'dark');
+                showToast("Theme Switch", "Switched back to Obsidian Luxury Dark Theme.");
+            }
         }
